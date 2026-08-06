@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MallowMimi v.1.5 - Apparel Prompt Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FFF5F7;
+            --card-bg: #FFFFFF;
+            --primary: #FF85A1;
+            --primary-hover: #FF6B8B;
+            --accent: #7209B7;
+            --text-dark: #4A4E69;
+            --border-color: #FFE5EC;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 20px 16px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(255, 133, 161, 0.12);
+            border: 2px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--primary);
+            font-size: 2rem;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: #8D99AE;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .lock-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: #8D99AE;
+            cursor: pointer;
+        }
+
+        .lock-container input {
+            width: auto;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            background-color: #FFF;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary);
+        }
+
+        .custom-input {
+            display: none;
+            margin-top: 8px;
+            border-color: #D8B4FE;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-generate {
+            flex: 2;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-surprise {
+            flex: 1;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-generate:hover { background-color: var(--primary-hover); }
+        .btn-surprise:hover { opacity: 0.9; }
+
+        .output-box {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .output-box.active {
+            display: block;
+        }
+
+        .prompt-card {
+            background: #FFF5F7;
+            border: 2px dashed var(--primary);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .prompt-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .prompt-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px;
+            resize: none;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        .btn-copy-single {
+            background-color: var(--text-dark);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn-copy-all {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>MallowMimi v.1.5</h1>
+        <p>👕 Generator Prompt Series Kaos Gemini AI</p>
+    </div>
+
+    <form id="promptForm">
+        <div class="form-group">
+            <div class="label-row">
+                <label for="character">1. Karakter Utama</label>
+                <label class="lock-container">
+                    <input type="checkbox" id="lockCharacter"> 🔒 Lock
+                </label>
+            </div>
+            <select id="character" onchange="toggleCustomCharacter()">
+                <option value="Capybara">Capybara</option>
+                <option value="Panda">Panda</option>
+                <option value="Bunny">Bunny (Kelinci)</option>
+                <option value="Cat">Cat (Kucing)</option>
+                <option value="Otter">Otter (Berang-berang)</option>
+                <option value="Hamster">Hamster</option>
+                <option value="CUSTOM">Lainnya... (Ketik Sendiri)</option>
+            </select>
+            <input type="text" id="customCharacter" class="custom-input" placeholder="Ketik karakter custom">
+        </div>
+
+        <div class="form-group">
+            <div class="label-row">
+                <label for="category">2. Gaya / Kategori Desain</label>
+                <label class="lock-container">
+                    <input type="checkbox" id="lockCategory"> 🔒 Lock
+                </label>
+            </div>
+            <select id="category">
+                <option value="Kawaii Minimalist">Kawaii Minimalist</option>
+                <option value="Funny & Relatable Animals">Funny & Relatable Animals</option>
+                <option value="Hobby & Profession">Hobby & Profession</option>
+                <option value="Seasonal Kawaii">Seasonal Kawaii</option>
+                <option value="Retro Vintage">Retro Vintage (70s-90s Style)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <div class="label-row">
+                <label for="activity">3. Aktivitas / Objek / Pakaian</label>
+                <label class="lock-container">
+                    <input type="checkbox" id="lockActivity"> 🔒 Lock
+                </label>
+            </div>
+            <select id="activity" onchange="toggleCustomActivity()">
+                <option value="drinking iced matcha latte wearing a cozy oversized hoodie">Drinking Matcha Latte + Hoodie</option>
+                <option value="working hard on a tiny laptop wearing glasses">Coding/Working on Laptop</option>
+                <option value="sleeping peacefully on a soft cloud">Sleeping Peacefully on Cloud</option>
+                <option value="holding a bouquet of flowers wearing a floral crown">Holding Flowers + Crown</option>
+                <option value="drinking hot coffee while looking moody and exhausted">Moody Drinking Coffee</option>
+                <option value="CUSTOM">Lainnya... (Ketik Sendiri)</option>
+            </select>
+            <input type="text" id="customActivity" class="custom-input" placeholder="Ketik aktivitas custom">
+        </div>
+
+        <div class="form-group">
+            <div class="label-row">
+                <label for="palette">4. Palette Warna / Mood</label>
+                <label class="lock-container">
+                    <input type="checkbox" id="lockPalette"> 🔒 Lock
+                </label>
+            </div>
+            <select id="palette">
+                <option value="Pastel soft colors">Pastel Soft</option>
+                <option value="Warm autumn colors">Warm Autumn</option>
+                <option value="Vibrant aesthetic colors">Vibrant Aesthetic</option>
+                <option value="Retro sunset distressed colors (burnt orange, mustard yellow)">Retro Sunset (70s)</option>
+                <option value="Black and white line art">Monochrome / Line Art</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="seriesCount">5. Jumlah Output Series (Prompt)</label>
+            <select id="seriesCount">
+                <option value="1">1 Prompt (Single Design)</option>
+                <option value="3">3 Prompts (Mini Collection Series)</option>
+                <option value="5">5 Prompts (Full Collection Series)</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn-generate">✨ Buat Series ✨</button>
+            <button type="button" class="btn-surprise" onclick="surpriseMe()">🎲 Surprise Me</button>
+        </div>
+    </form>
+
+    <div class="output-box" id="outputBox">
+        <button class="btn-copy-all" id="copyAllBtn" onclick="copyAllPrompts()" style="display:none;">📦 Copy Semua Prompt Sekaligus</button>
+        <div id="promptsContainer"></div>
+    </div>
+</div>
+
+<script>
+    const charsList = ['Capybara', 'Panda', 'Bunny', 'Cat', 'Otter', 'Hamster', 'Shiba Inu', 'Bear'];
+    const categoriesList = ['Kawaii Minimalist', 'Funny & Relatable Animals', 'Hobby & Profession', 'Seasonal Kawaii', 'Retro Vintage'];
+    const activitiesList = [
+        'drinking iced matcha latte wearing a cozy oversized hoodie',
+        'working hard on a tiny laptop wearing glasses',
+        'sleeping peacefully on a soft cloud',
+        'eating a slice of strawberry cake happily',
+        'wearing a vintage retro helmet on a scooter',
+        'reading a huge thick book with cute glasses',
+        'cooking as a professional chef with a tall white hat',
+        'gardening with a small watering can and straw hat'
+    ];
+    const palettesList = ['Pastel soft colors', 'Warm autumn colors', 'Vibrant aesthetic colors', 'Retro sunset distressed colors (burnt orange, mustard yellow)', 'Black and white line art'];
+
+    let generatedPromptsArray = [];
+
+    function toggleCustomCharacter() {
+        const val = document.getElementById('character').value;
+        document.getElementById('customCharacter').style.display = (val === 'CUSTOM') ? 'block' : 'none';
+    }
+
+    function toggleCustomActivity() {
+        const val = document.getElementById('activity').value;
+        document.getElementById('customActivity').style.display = (val === 'CUSTOM') ? 'block' : 'none';
+    }
+
+    document.getElementById('promptForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        generatePromptSeries();
+    });
+
+    function getFieldValue(fieldId, customId, defaultVal) {
+        let val = document.getElementById(fieldId).value;
+        if (val === 'CUSTOM') {
+            return document.getElementById(customId).value || defaultVal;
+        }
+        return val;
+    }
+
+    function generateSinglePrompt(c, cat, a, p) {
+        return `A high-resolution t-shirt graphic design featuring a cute ${c} ${a}, ${cat} style. ${p} color palette. Clean vector illustration, bold clean artwork, 4:5 vertical print composition, bold high-contrast details, no sticker outline, no white border around graphic, graphic tee art, isolated on a solid flat white background, no text, no apparel mockups.`;
+    }
+
+    function generatePromptSeries() {
+        const count = parseInt(document.getElementById('seriesCount').value);
+        generatedPromptsArray = [];
+        const container = document.getElementById('promptsContainer');
+        container.innerHTML = '';
+
+        const baseChar = getFieldValue('character', 'customCharacter', 'Cute Character');
+        const baseCat = document.getElementById('category').value;
+        const baseAct = getFieldValue('activity', 'customActivity', 'doing something cute');
+        const basePal = document.getElementById('palette').value;
+
+        const isCharLocked = document.getElementById('lockCharacter').checked;
+        const isCatLocked = document.getElementById('lockCategory').checked;
+        const isActLocked = document.getElementById('lockActivity').checked;
+        const isPalLocked = document.getElementById('lockPalette').checked;
+
+        for (let i = 0; i < count; i++) {
+            let currentChar = isCharLocked ? baseChar : getRandomVal(charsList, baseChar, i);
+            let currentCat = isCatLocked ? baseCat : getRandomVal(categoriesList, baseCat, i);
+            let currentAct = isActLocked ? baseAct : getRandomVal(activitiesList, baseAct, i);
+            let currentPal = isPalLocked ? basePal : getRandomVal(palettesList, basePal, i);
+
+            let promptText = generateSinglePrompt(currentChar, currentCat, currentAct, currentPal);
+            generatedPromptsArray.push(promptText);
+
+            // Render Kartu Per-Prompt
+            const card = document.createElement('div');
+            card.className = 'prompt-card';
+            card.innerHTML = `
+                <div class="prompt-card-header">
+                    <span class="prompt-title">PROMPT #${i + 1}</span>
+                </div>
+                <textarea id="promptText_${i}" readonly>${promptText}</textarea>
+                <button class="btn-copy-single" id="btnCopy_${i}" onclick="copySinglePrompt(${i})">📋 Copy Prompt #${i + 1}</button>
+            `;
+            container.appendChild(card);
+        }
+
+        // Tampilkan/Sembunyikan Tombol Copy All
+        const copyAllBtn = document.getElementById('copyAllBtn');
+        copyAllBtn.style.display = (count > 1) ? 'block' : 'none';
+
+        document.getElementById('outputBox').classList.add('active');
+        document.getElementById('outputBox').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function getRandomVal(arr, lockedVal, index) {
+        if (index === 0) return lockedVal;
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function surpriseMe() {
+        if (!document.getElementById('lockCharacter').checked) {
+            document.getElementById('character').value = charsList[Math.floor(Math.random() * charsList.length)];
+            toggleCustomCharacter();
+        }
+
+        if (!document.getElementById('lockCategory').checked) {
+            document.getElementById('category').value = categoriesList[Math.floor(Math.random() * categoriesList.length)];
+        }
+
+        if (!document.getElementById('lockActivity').checked) {
+            document.getElementById('activity').value = activitiesList[Math.floor(Math.random() * activitiesList.length)];
+            toggleCustomActivity();
+        }
+
+        if (!document.getElementById('lockPalette').checked) {
+            document.getElementById('palette').value = palettesList[Math.floor(Math.random() * palettesList.length)];
+        }
+
+        generatePromptSeries();
+    }
+
+    function copySinglePrompt(index) {
+        const text = generatedPromptsArray[index];
+        const btn = document.getElementById(`btnCopy_${index}`);
+        executeCopy(text, btn, `📋 Copy Prompt #${index + 1}`);
+    }
+
+    function copyAllPrompts() {
+        const allText = generatedPromptsArray.map((p, i) => `--- PROMPT ${i + 1} ---\n${p}`).join('\n\n');
+        const btn = document.getElementById('copyAllBtn');
+        executeCopy(allText, btn, '📦 Copy Semua Prompt Sekaligus');
+    }
+
+    function executeCopy(text, btnElement, originalText) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => showSuccess(btnElement, originalText)).catch(() => fallbackCopy(text, btnElement, originalText));
+        } else {
+            fallbackCopy(text, btnElement, originalText);
+        }
+    }
+
+    function fallbackCopy(text, btnElement, originalText) {
+        const dummy = document.createElement('textarea');
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        try {
+            document.execCommand('copy');
+            showSuccess(btnElement, originalText);
+        } catch (err) {
+            alert('Gagal menyalin, silakan tekan manual.');
+        }
+        document.body.removeChild(dummy);
+    }
+
+    function showSuccess(btnElement, originalText) {
+        btnElement.innerText = "✅ Tersalin!";
+        btnElement.style.backgroundColor = "#4CAF50";
+        setTimeout(() => {
+            btnElement.innerText = originalText;
+            btnElement.style.backgroundColor = "";
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
